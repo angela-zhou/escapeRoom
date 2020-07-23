@@ -1,2 +1,2 @@
 # escapeRoom
-For their Google CSSI Project, Vyshnavi and Angela are making a Google-themed escape room using Glitch.
+This is our (Vyshnavi and Angela's) Google-themed escape room which we built using Glitch for the Google CSSI 2020 final project.
