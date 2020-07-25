@@ -13,4 +13,5 @@ class Clickable {
     let hit = collideRectRect(this.x, this.y, this.w, this.h, mouseX, mouseY, cursorW, cursorH);
     return hit;
   }
+  
 }
