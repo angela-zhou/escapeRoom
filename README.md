@@ -1,12 +1,7 @@
-Welcome to Glitch
+Welcome to our Google-themed Escape Room
 =================
 
-Click `Show` in the header to see your app live. Updates to your code will instantly deploy and update live.
-
-**Glitch** is the friendly community where you'll build the app of your dreams. Glitch lets you instantly create, remix, edit, and host an app, bot or site, and you can invite collaborators or helpers to simultaneously edit code with you.
-
-Find out more [about Glitch](https://glitch.com/about).
-
+From July 6th to July 22nd, Vyshnavi Rajeevan and Angela Zhou participated in CSSI: Online 2020.
 
 Your Project
 ------------
