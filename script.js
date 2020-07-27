@@ -9,7 +9,7 @@ Possible Next Steps:
 
 /* global createCanvas, windowWidth, windowHeight, loadImage, rect, mouseX, mouseY, 
   noStroke, background, loadImage, image, height, width, fill, Clickable, text, textSize,
-  push, pop, collideRectRect, remove, textAlign, RIGHT, startTimer */
+  push, pop, collideRectRect, remove, textAlign, RIGHT, startTimer, loadSound, soundFormats, key*/
 
 // images
 let officeImg, fireImg, brailleImg, keyImg, safeImg;
@@ -30,6 +30,19 @@ let light1Clicks    = 0;
 let light2Clicks    = 0;
 let light3Clicks    = 0;
 
+// screen booleans
+let isWelcome  = true;
+let isInstruct = false;
+let gameWin    = false;
+let gameLose   = false;
+
+// screen images
+let welcomeScreen, instructScreen, gameWinScreen, gameLoseScreen;
+
+// combinations
+const numberCode = "0706";
+const letterCode = "jaclyn";
+
 // booleans
 let keyFound  = false;
 let safeFound = false;
@@ -41,14 +54,12 @@ const cursorH = 10;
 // text settings
 const textX      = imageWidth + 40;
 const textY      = 40
-const smallText  = 14;
-const mediumText = 24;
 const largeText  = 32;
 
 // image dimensions
-const topRowY     = textY * 4;
-const middleRowY  = textY * 10;
-const bottomRowY  = textY * 13;
+const topRowY     = textY * 2;
+const middleRowY  = textY * 8;
+const bottomRowY  = textY * 11;
 
 const fireX       = textX;
 const fireY       = topRowY;
@@ -82,7 +93,7 @@ function setup() {
   createCanvas(2000, 1000);
   noStroke();
   
-  // only want to load images once
+  // load the clue images
   brailleImg = loadImage("https://cdn.glitch.com/20d3db83-bd8e-43c1-8f8b-226c9bb666c5%2Fbraille.png?v=1595525996171");
   officeImg  = loadImage("https://cdn.glitch.com/20d3db83-bd8e-43c1-8f8b-226c9bb666c5%2FgoogleOffice.webp?v=1595524300573");
   fireImg    = loadImage("https://cdn.glitch.com/20d3db83-bd8e-43c1-8f8b-226c9bb666c5%2FfireExtinguisher.png?v=1595696233819");
@@ -92,27 +103,39 @@ function setup() {
   cl         = loadImage("https://cdn.glitch.com/20d3db83-bd8e-43c1-8f8b-226c9bb666c5%2Fcl.png?v=1595688989924");
   yn         = loadImage("https://cdn.glitch.com/20d3db83-bd8e-43c1-8f8b-226c9bb666c5%2Fyn.png?v=1595688993883");
   
-  // display the title 
-  textSize(largeText);
-  text("Find your hard drive!", textX, textY);
-  
-  // display the instructions
-  textSize(smallText);
-  text("Click anywhere on the image to find clues", textX, textY * 2);
-  
-  // display the subtitle
-  textSize(mediumText);
-  text("Tools Collected:", textX, textY * 3);
-  
-  // display the first alert
-  alert("You are the biggest contributor to a world-changing Google update that you put on a hard drive.\nThere’s only one problem: your arch-rival hid your hard drive somewhere in their office.\nYou must find it before the timer runs out and your arch-rival presents their idea at the meeting instead.")
+  // load the screens
+  welcomeScreen  = loadImage("https://cdn.glitch.com/20d3db83-bd8e-43c1-8f8b-226c9bb666c5%2F1.png?v=1595868392779");
+  instructScreen = loadImage("https://cdn.glitch.com/20d3db83-bd8e-43c1-8f8b-226c9bb666c5%2F2.png?v=1595868395603");
+  gameWinScreen  = loadImage("https://cdn.glitch.com/20d3db83-bd8e-43c1-8f8b-226c9bb666c5%2F3.png?v=1595864023786");
+  gameLoseScreen = loadImage("https://cdn.glitch.com/20d3db83-bd8e-43c1-8f8b-226c9bb666c5%2F4.png?v=1595864028270");
 }
 
+
 function draw() {
-  // set the image
+  // draw the appropriate different screen
+  if (isWelcome) {
+    background(welcomeScreen);
+  } else if (isInstruct) {
+    background(instructScreen);
+  } else if (gameWin) {
+    background(gameWinScreen);
+  } else if (gameLose) {
+    background(gameLoseScreen)
+  }
+}
+
+function startGame() {
+  // set the game background
+  background(255);
+      
+  // display the title 
+  textSize(largeText);
+  text("Tools Collected:", textX, textY);
+      
+   // set the image
   image(officeImg, 0, 0, imageWidth, imageHeight);
-  
-  // create all the clickables
+    
+  // create all the clickables  
   chair     = new Clickable( 250, 360, 150, 220);
   fireplace = new Clickable( 500, 430, 210, 130);
   books     = new Clickable( 885, 136,  50,  50);
@@ -122,7 +145,25 @@ function draw() {
   lights[1] = new Clickable( 770, 170,  40,  70);
   lights[2] = new Clickable(1000, 160,  36,  70);
   safe      = new Clickable(safeX, safeY, safeWidth, safeHeight);
-  
+}
+
+// introduction of the game
+// the code that triggers the main functionality
+function keyPressed() {
+  // pressing 's' starts the instructions/game
+  if (key == 's') {
+    if (isWelcome) {
+      // get rid of the welcome screen
+      isWelcome  = false;
+      // set the instructions screen
+      isInstruct = true;
+    } else if (isInstruct) {
+      // get rid of the instructions screen
+      isInstruct = false;
+      // start the game
+      startGame();
+    }
+  }
 }
 
 // if statements for clickables getting hit
@@ -130,7 +171,7 @@ function draw() {
 function mouseClicked() {
   
   if (chair.hit(cursorW, cursorH)) {
-    console.log("hit");
+    //console.log("hit");
     
     // increment the number of hits
     chairClicks++;
@@ -146,7 +187,7 @@ function mouseClicked() {
   } 
   
   else if (fireplace.hit(cursorW, cursorH)) {
-    console.log("hit");
+    //console.log("hit");
     
     // only if the chair has been clicked...
     if (chairClicks === 1) {
@@ -163,11 +204,10 @@ function mouseClicked() {
         image(brailleImg, brailleX, brailleY);
       }
     }
-    
   } 
   
   else if (books.hit(cursorW, cursorH)) {
-    console.log("hit");
+    //console.log("hit");
     
     // if the safe hasn't been found yet
     if (!safeFound) {
@@ -177,14 +217,14 @@ function mouseClicked() {
   } 
   
   else if (moose.hit(cursorW, cursorH)) {
-    console.log("hit");
+    //console.log("hit");
     
     // show the alert
-    alert("You found a code: 0706");
+    alert("You found a code: " + numberCode);
   } 
   
   else if (ceiling.hit(cursorW, cursorH)) {
-    console.log("hit");
+    //console.log("hit");
     
     // if the key hasn't been found yet
     if (!keyFound) {
@@ -194,7 +234,7 @@ function mouseClicked() {
   }
   
   else if (lights[0].hit(cursorW, cursorH)) {
-    console.log("hit");
+    //console.log("hit");
     // increment the number of hits
     light1Clicks++;
         
@@ -206,7 +246,7 @@ function mouseClicked() {
   }
   
   else if (lights[1].hit(cursorW, cursorH)) {
-    console.log("hit");
+    //console.log("hit");
     // increment the number of hits
     light2Clicks++;
       
@@ -218,7 +258,7 @@ function mouseClicked() {
   }
     
   else if (lights[2].hit(cursorW, cursorH)) {
-    console.log("hit");
+    //console.log("hit");
     // increment the number of hits
     light3Clicks++;
       
@@ -233,11 +273,9 @@ function mouseClicked() {
     // if the key and the safe have both been found
     if (keyFound && safeFound) {
       // the user wins the game
-      alert("Congratulations! You found the hard drive!");
+      gameWin = true;
     }
   }
-  
-  // else {}
 }
 
 // functions for the user input
@@ -248,7 +286,7 @@ function numberLock() {
   var combo = prompt("A locked box fell from the ceiling.\nEnter a 4-digit combination to unlock it:");
   
   // if the user enters the right combo
-  if (combo == "0706") {
+  if (combo == numberCode) {
     // tell them they found the key
     alert("You found a key!");
     // set keyFound to true
@@ -270,7 +308,7 @@ function wordLock() {
   var combo = prompt("You found a locked box disguised as books.\nEnter a 6-letter word combination to unlock it:");
   
   // if the user enters the right combo
-  if (combo == "jaclyn") {
+  if (combo.toLowerCase() == letterCode) {
     // tell them they found a safe
     alert("You found a locked safe. It looks like it needs a key to open it.");
     // set safeFound to true
@@ -284,4 +322,32 @@ function wordLock() {
   } else {
       alert("Wrong combination\nPlease try again.");
   }
+}
+
+// timer functions
+
+function startTimer() {
+  
+  var presentTime = document.getElementById('timer').innerHTML;
+  var timeArray = presentTime.split(/[:]+/);
+  var m = timeArray[0];
+  var s = checkSecond((timeArray[1] - 1));
+  
+  if (s== 59) {
+    m--;
+  }
+  
+  if (m < 0) {
+    gameLose = true;
+  }
+  
+  document.getElementById('timer').innerHTML = m + ":" + s;
+  console.log(m)
+  setTimeout(startTimer, 1000);
+}
+
+function checkSecond(sec) {
+  if (sec < 10 && sec >= 0) {sec = "0" + sec}; // add zero in front of numbers < 10
+  if (sec < 0) {sec = "59"};
+  return sec;
 }
