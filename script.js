@@ -9,11 +9,16 @@ Possible Next Steps:
 
 /* global createCanvas, windowWidth, windowHeight, loadImage, rect, mouseX, mouseY, 
   noStroke, background, loadImage, image, height, width, fill, Clickable, text, textSize,
-  push, pop, collideRectRect, remove, textAlign, RIGHT, startTimer, loadSound, soundFormats, key*/
+  push, pop, collideRectRect, remove, textAlign, RIGHT, startTimer, loadSound, soundFormats, key, removeItem, p5*/
 
 // images
 let officeImg, fireImg, brailleImg, keyImg, safeImg;
 let ja, cl, yn;
+
+// sound
+let backgroundMusic;
+let loopStart    = 0.5;
+let loopDuration = 0.2;
 
 // image settings
 const imageWidth  = 1180;
@@ -81,17 +86,27 @@ const clX         = textX + 150;
 const jaX         = textX + 300;
 const lettersY    = middleRowY;
 
-const brailleX    = textX
-const brailleY    = bottomRowY;
+const brailleX      = textX - 20;
+const brailleY      = bottomRowY;
+const brailleWidth  = 500;
+const brailleHeight = 250;
+
+var count = 1
 
 // setup the timer
-document.getElementById('timer').innerHTML = 5 + ":" + 0;
+document.getElementById('timer').innerHTML = 30 + ":" + 30;
+
 startTimer();
 
 function setup() {
   // canvas & color settings
-  createCanvas(2000, 1000);
+  createCanvas(1700, 800);
   noStroke();
+  
+  // // load sound
+  soundFormats('mp3', 'ogg');
+  backgroundMusic = loadSound("https://cdn.glitch.com/20d3db83-bd8e-43c1-8f8b-226c9bb666c5%2FmysteryMusicTrim.mp3?v=1595880669023");
+
   
   // load the clue images
   brailleImg = loadImage("https://cdn.glitch.com/20d3db83-bd8e-43c1-8f8b-226c9bb666c5%2Fbraille.png?v=1595525996171");
@@ -112,7 +127,8 @@ function setup() {
 
 
 function draw() {
-  // draw the appropriate different screen
+  
+  // draw the appropriate screens
   if (isWelcome) {
     background(welcomeScreen);
   } else if (isInstruct) {
@@ -120,14 +136,17 @@ function draw() {
   } else if (gameWin) {
     background(gameWinScreen);
   } else if (gameLose) {
-    background(gameLoseScreen)
+    background(gameLoseScreen);
   }
 }
 
 function startGame() {
   // set the game background
   background(255);
-      
+  
+  // play the sound
+  backgroundMusic.loop();
+  
   // display the title 
   textSize(largeText);
   text("Tools Collected:", textX, textY);
@@ -176,11 +195,10 @@ function mouseClicked() {
     // increment the number of hits
     chairClicks++;
     
-    // show the alert
-    alert("You moved the chair and found a fire extinguisher.");
-    
     // only the first time you click...
     if (chairClicks === 1) {
+      // show the alert
+      alert("You moved the chair and found a fire extinguisher.");
       // show the image
       image(fireImg, fireX, fireY, fireWidth, fireHeight);
     }
@@ -190,7 +208,7 @@ function mouseClicked() {
     //console.log("hit");
     
     // only if the chair has been clicked...
-    if (chairClicks === 1) {
+    if (chairClicks >= 1) {
       
       // you start incrementing the number of hits
       fireplaceClicks++;
@@ -201,7 +219,7 @@ function mouseClicked() {
       // only the first time you click the fireplace after the chair...
       if (fireplaceClicks === 1) {
         // show the image
-        image(brailleImg, brailleX, brailleY);
+        image(brailleImg, brailleX, brailleY, brailleWidth, brailleHeight);
       }
     }
   } 
@@ -339,6 +357,9 @@ function startTimer() {
   
   if (m < 0) {
     gameLose = true;
+    remove(startTimer);
+    alert("Time is UP");
+    
   }
   
   document.getElementById('timer').innerHTML = m + ":" + s;
