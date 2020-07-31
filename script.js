@@ -106,7 +106,7 @@ const brailleWidth  = 500;
 const brailleHeight = 250;
 
 // setup the timer
-document.getElementById('timer').innerHTML = 7 + ":" + 0;
+document.getElementById('timer').innerHTML = 20 + ":" + 0;
 
 startTimer();
 
@@ -122,7 +122,8 @@ function setup() {
   // // load sound
   soundFormats('mp3', 'ogg');
   backgroundMusic = loadSound("https://cdn.glitch.com/20d3db83-bd8e-43c1-8f8b-226c9bb666c5%2FmysteryMusicTrim.mp3?v=1595880669023");
-
+  // make the music quieter
+  backgroundMusic.setVolume(0.5); 
   
   // load the clue images
   brailleImg = loadImage("https://cdn.glitch.com/20d3db83-bd8e-43c1-8f8b-226c9bb666c5%2Fbraille.png?v=1595525996171");
@@ -477,7 +478,7 @@ function startTimer() {
   
   if (m < 0) {
     gameLose = true;
-    remove(startTimer);
+    //remove(startTimer);
     //alert("Time is UP");
   }
   
