@@ -8,25 +8,4 @@ Your Project
 
 ### ← README.md
 
-That's this file, where you can tell people what your cool website does and how you built it.
-
-### ← index.html
-
-Where you'll write the content of your website. 
-
-### ← style.css
-
-CSS files add styling rules to your content.
-
-### ← script.js
-
-If you're feeling fancy you can add interactivity to your site with JavaScript.
-
-### ← assets
-
-Drag in `assets`, like images or music, to add them to your project
-
-Made by [Glitch](https://glitch.com/)
--------------------
-
-\ ゜o゜)ノ
+You are the biggest contributor to a world-changing Google update that you put on a hard drive. There’s only one problem: your arch-rival hid your hard drive somewhere in their office. You must find it before the timer runs out and your arch-rival presents their idea at the meeting instead. Find the hard drive and escape the room!
